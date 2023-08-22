@@ -1,0 +1,73 @@
+# Ansible playbook first installs Docker  using the apt module. Then, it builds a Docker image using the docker build command and runs a Docker container using the docker run command.
+
+---
+- name: Configure BlogApp EC2 instance
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install Node.js and npm
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - nodejs
+        - npm
+
+    - name: Install MySQL client
+      apt:
+        name: mysql-client
+        state: present
+
+    - name: Copy BlogApp code to EC2 instance
+      copy:
+        src: blogapp
+        dest: /home/ubuntu/blogapp
+        owner: ubuntu
+        group: ubuntu
+        mode: 0755
+
+    - name: Install BlogApp dependencies
+      command: npm install
+      args:
+        chdir: /home/ubuntu/blogapp
+     
+    - name: Install Docker dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg
+        - lsb-release
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: present
+    - name: Start BlogApp application
+      command: npm run start
+      args:
+        chdir: /home/ubuntu/blogapp
+
+- name: Build and run Dockerized application
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Build Docker image
+      command: docker build -t blogApp /home/ubuntu/blogApp
+
+    - name: Run Docker container
+      command: docker run -d -p 3000:3000 blogApp    

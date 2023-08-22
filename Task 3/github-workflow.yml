@@ -1,0 +1,29 @@
+#workflow is triggered on a push to the main branch. It checks out the code, sets up Node.js, installs dependencies, builds the application, and then deploys the built files to the EC2 instance using the scp command.
+
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy
+        run: scp -r ./dist user@ec2-instance:/home/ubuntu/blogApp
