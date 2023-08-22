@@ -1,5 +1,5 @@
 
-Dockerize the BlogApp application, you can follow these steps:
+# Dockerize the BlogApp application, you can follow these steps:
 
 1: Create a Dockerfile Create a file named Dockerfile in the root directory of your BlogApp project
 2: Build a docker image
