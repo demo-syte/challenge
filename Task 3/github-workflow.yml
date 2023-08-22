@@ -1,5 +1,3 @@
-#workflow is triggered on a push to the main branch. It checks out the code, sets up Node.js, installs dependencies, builds the application, and then deploys the built files to the EC2 instance using the scp command.
-
 name: Build and Deploy
 
 on:
@@ -8,22 +6,25 @@ on:
       - main
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 12
+      - name: Build Docker image
+        run: docker build -t blogapp:latest .
 
-      - name: Install dependencies
-        run: npm install
+      - name: Archive Docker image
+        run: |
+          docker save blogapp:latest | gzip > blogapp.tar.gz
 
-      - name: Build
-        run: npm run build
-
-      - name: Deploy
-        run: scp -r ./dist user@ec2-instance:/home/ubuntu/blogApp
+      - name: Deploy Docker image to EC2
+        run: |
+          scp blogapp.tar.gz user@ec2-instance:/path/to/app
+          ssh user@ec2-instance "\
+            cd /path/to/app && \
+            gunzip -c blogapp.tar.gz | docker load && \
+            docker stop blogapp || true && \
+            docker run -d -p 3000:3000 --name blogapp blogapp:latest"
