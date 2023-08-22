@@ -1,6 +1,6 @@
 # What's happening here:
 
-Building Docker Image: We're building the Docker image directly from the checked-out code and your Dockerfile.
+Building Docker Image: We're building the Docker image directly from the checked-out code and our Dockerfile.
 
 Archiving the Docker Image: After building, the Docker image is saved as a tarball, which makes it easier to transfer to the EC2 instance.
 
