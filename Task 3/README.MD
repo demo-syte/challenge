@@ -1,10 +1,10 @@
-#What's happening here:
+# What's happening here:
 
 Building Docker Image: We're building the Docker image directly from the checked-out code and your Dockerfile.
 
 Archiving the Docker Image: After building, the Docker image is saved as a tarball, which makes it easier to transfer to the EC2 instance.
 
-##Deploying to EC2:
+## Deploying to EC2:
 
 The tarball is copied to the EC2 instance.
 We then load the Docker image from the tarball into the Docker daemon on the EC2 instance.
