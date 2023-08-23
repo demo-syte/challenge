@@ -3,7 +3,7 @@
  #### Create a CloudFront distribution that uses the EKS cluster's endpoint as its origin.
 
 provider "aws" {
-  region = "us-west-2"
+  region = "ap-southeast-1"
 }
 
 module "eks" {
