@@ -59,4 +59,5 @@ jobs:
 
 
 ##### Build and Push: The workflow first builds the Docker image of the BlogApp, tags it with the current commit SHA, and pushes it to Docker Hub.
-##### Configure and Deploy: It then configures AWS credentials, sets up kubectl for the EKS cluster, updates the Kubernetes configurations to use the newly pushed Docker image, and finally deploys the updated configuration to EKS
+##### Configure and Deploy: It then configures AWS credentials, sets up kubectl for the EKS cluster,
+##### updates the Kubernetes configurations to use the newly pushed Docker image, and finally deploys the updated configuration to EKS
