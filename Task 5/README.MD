@@ -8,12 +8,12 @@ This Python script generates a diagram illustrating an AWS disaster recovery pla
 - `diagrams` library (install using `pip install diagrams`)
 ### Note: underlying library diagrams relies on Graphviz's dot executable to render the diagrams. When you attempt to run your Python script, it's unable to find the dot executable in the system's PATH and Check if dot is in your PATH: Run the script in python virtual env if getting error in normal terminal.
 
-  $ sudo apt-get install graphviz
+  $ sudo apt-get install graphviz \
   $ Which dot
 
- $ pip install virtualenv
- $ virtualenv myenv
- $ source myenv/bin/activate
+ $ pip install virtualenv \
+ $ virtualenv myenv \
+ $ source myenv/bin/activate \
  $ pip install diagrams
 
 
