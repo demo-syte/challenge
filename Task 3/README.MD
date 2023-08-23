@@ -1,12 +1,18 @@
-# What's happening here:
+# Steps:
 
-Building Docker Image: We're building the Docker image directly from the checked-out code and our Dockerfile.
-
-Archiving the Docker Image: After building, the Docker image is saved as a tarball, which makes it easier to transfer to the EC2 instance.
+    Docker Hub account 
+    then create a repository on Docker Hub for your BlogApp.
+    Add use Docker Hub username and password as secrets in  GitHub repository settings. We can name them DOCKER_HUB_USERNAME and DOCKER_HUB_PASSWORD respectively.
 
 ## Deploying to EC2:
 
-The tarball is copied to the EC2 instance.
-We then load the Docker image from the tarball into the Docker daemon on the EC2 instance.
-Before running the new Docker container, we attempt to stop any running container named blogapp. The || true ensures that the command succeeds even if the blogapp container doesn't exist.
-Finally, we run the Docker container with the name blogapp
+    Builds the Docker image.
+    Logs into Docker Hub.
+    Tags the image with your Docker Hub username and the repository name.
+    Pushes the Docker image to Docker Hub.
+    SSHs into your EC2 instance, pulls the Docker image from Docker Hub, stops any previous instance of the blogapp container, and then starts a new one.
+## Ensure:
+
+    We have  granted necessary permissions for  GitHub Actions runner to push to  Docker Hub repository.
+    Docker is installed on  EC2 instance which we already did in previous steps.
+    We've set up SSH keys and/or credentials appropriately for the ssh command to work without requiring a password.
