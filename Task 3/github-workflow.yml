@@ -16,15 +16,17 @@ jobs:
       - name: Build Docker image
         run: docker build -t blogapp:latest .
 
-      - name: Archive Docker image
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+
+      - name: Tag and push Docker image to Docker Hub
         run: |
-          docker save blogapp:latest | gzip > blogapp.tar.gz
+          docker tag blogapp:latest ${{ secrets.DOCKER_HUB_USERNAME }}/blogapp:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/blogapp:latest
 
       - name: Deploy Docker image to EC2
         run: |
-          scp blogapp.tar.gz user@ec2-instance:/path/to/app
           ssh user@ec2-instance "\
-            cd /path/to/app && \
-            gunzip -c blogapp.tar.gz | docker load && \
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/blogapp:latest && \
             docker stop blogapp || true && \
-            docker run -d -p 3000:3000 --name blogapp blogapp:latest"
+            docker run -d -p 3000:3000 --name blogapp ${{ secrets.DOCKER_HUB_USERNAME }}/blogapp:latest"
